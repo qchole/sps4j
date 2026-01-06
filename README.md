@@ -181,7 +181,7 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   </dependencies>
   ```
 
-- **实现插件接口并标记插件注解，springboot应用注解**（插件注解`tags`可以添加`SpringBoot2AppPlugin.TAG_SPRING_MVC`，此时插件将会作为spring-mvc应用启动，可以在插件中暴露web端点。）
+- **实现插件接口并标记插件注解，springboot应用注解**（插件注解`tags`可以添加`SpringBoot2AppPlugin.TAG_SPRING_MVC`，此时插件将会作为spring-mvc应用启动，可以在插件中暴露web端点。目前仅支持tomcat作为webserver）
     ```java
     @Sps4jPlugin(
         name = "spring-hello",
@@ -307,6 +307,6 @@ This response comes from a controller inside the plugin!
 
 ## 🛠️ 从源码构建
 
-1.  克隆本项目
+1.  克隆本项目: `git clone https://github.com/Allan-QLB/sps4j.git`
 2.  进入项目根目录: `cd sps4j`
 3.  使用Maven进行构建: `mvn clean install`
