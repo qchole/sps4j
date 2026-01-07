@@ -153,7 +153,7 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
 利用`sps4j-spring-boot2`模块，可以实现更深度的集成，让插件自身成为一个spring-boot应用，当前支持spring-boot 2.x版本。
 
 #### 步骤 1: 定义插件接口（契约模块）
-这一步与非Spring Boot插件完全相同。你需要一个独立的 `greeter-api` 模块来定义`GreeterPlugin`接口。
+这一步与一般插件完全相同。你需要一个独立的 `greeter-api` 模块来定义`GreeterPlugin`接口。
 
 #### 步骤 2: 实现Spring Boot插件
 插件不仅可以实现业务逻辑，还可以包含自己的Controller、Service等。
@@ -215,7 +215,7 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   ```
 
 - **插件应用配置文件`application.yml`**:
-  为了避免与主应用或其他插件的端点冲突，强烈建议为每个Web插件设置独立的上下文路径（Context Path）。
+  为了避免与主应用或其他插件的端点冲突，建议为每个Web插件设置独立的上下文路径（Context Path）。
   ```yaml
   server:
     servlet:
@@ -294,7 +294,7 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
 
 打开浏览器或使用curl，访问 `http://localhost:8080/my-plugin/hello`。
 
-你将会看到响应:
+将会得到响应:
 ```
 This response comes from a controller inside the plugin!
 ```
