@@ -37,7 +37,6 @@ import java.util.*;
  */
 @AutoService(Processor.class)
 @SupportedOptions({"pluginVersion", "pluginArtifact"})
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class PluginProcessor extends AbstractProcessor {
     private static final String ERROR_MSG_FORMAT = "@Plugin annotation error on class '%s', parameter '%s', msg: %s";
     private String projectVersion = null;
@@ -296,6 +295,10 @@ public class PluginProcessor extends AbstractProcessor {
         }
     }
 
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {

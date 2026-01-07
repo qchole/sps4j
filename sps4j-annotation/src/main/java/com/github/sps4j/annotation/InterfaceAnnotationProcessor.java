@@ -29,7 +29,6 @@ import java.util.*;
  * @see Sps4jPluginInterface
  */
 @AutoService(Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class InterfaceAnnotationProcessor extends AbstractProcessor {
     static final String PLUGIN_BASE_INTERFACE = "com.github.sps4j.core.Sps4jPlugin";
 
@@ -85,6 +84,10 @@ public class InterfaceAnnotationProcessor extends AbstractProcessor {
     }
 
 
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
