@@ -322,21 +322,14 @@ public class DefaultPluginManager implements PluginManager {
         return type;
     }
 
-    private MetaInfo getAvailableMetaInfo(String type, String name) {
-        if (!isSupportedType(type)) {
-            throw new PluginException("Unsupported plugin type: " + type + " supported types:" + SUPPORTED_TYPES.values());
-        }
-        final Map<String, TreeMap<Version, MetaInfo>> typeMap = pluginMetaMap.get(type);
-        if (MapUtils.isEmpty(typeMap)) {
-            throw new PluginException(PLUGIN_DESC_FOUND_MSG_PREF + type);
-        }
-        final TreeMap<Version, MetaInfo> versions = typeMap.get(name);
-        if (MapUtils.isEmpty(versions)) {
-            throw new PluginException(PLUGIN_DESC_FOUND_MSG_PREF + type + " name " + name);
-        }
-        final Iterator<Map.Entry<Version, MetaInfo>> iterator = versions.descendingMap().entrySet().iterator();
-        final Map.Entry<Version, MetaInfo> next = iterator.next();
-        return next.getValue();
+    @VisibleForTesting
+    MetaInfo getToloadMetaInfo(String type, String name) {
+        PluginArtifact ar = PluginArtifact.builder()
+                .type(type)
+                .name(name)
+                .build();
+        return Optional.ofNullable(getPluginMetaInfo(ar)).orElseThrow(() -> new PluginException(PLUGIN_DESC_FOUND_MSG_PREF + ar));
+
     }
 
     PluginWrapper getLoadedPlugin(PluginArtifact pluginArtifact) {
@@ -345,6 +338,9 @@ public class DefaultPluginManager implements PluginManager {
 
     @Override
     public MetaInfo getPluginMetaInfo(@Nonnull PluginArtifact artifact) {
+        if (!isSupportedType(artifact.getType())) {
+            throw new PluginException("Unsupported plugin type: " + artifact.getType() + " supported types:" + SUPPORTED_TYPES.values());
+        }
         final Map<String, TreeMap<Version, MetaInfo>> ofType = pluginMetaMap.get(artifact.getType());
         if (MapUtils.isEmpty(ofType)) {
             return null;
@@ -362,7 +358,7 @@ public class DefaultPluginManager implements PluginManager {
         if (loadedPlugin != null) {
             return loadedPlugin;
         }
-        MetaInfo metaInfo = getAvailableMetaInfo(type, name);
+        MetaInfo metaInfo = getToloadMetaInfo(type, name);
         final PluginWrapper pluginWrapper = PluginWrapper.builder()
                 .plugin(pluginLoader.load(metaInfo, classLoader, config)).metaInfo(metaInfo).build();
         loaded.put(artifact, pluginWrapper);
@@ -454,7 +450,7 @@ public class DefaultPluginManager implements PluginManager {
             if (MapUtils.isNotEmpty(tm)) {
                 for (Map.Entry<String, TreeMap<Version, MetaInfo>> entry : tm.entrySet()) {
                     if (MapUtils.isNotEmpty(entry.getValue())) {
-                        metas.add(getAvailableMetaInfo(type, entry.getKey()));
+                        metas.add(getToloadMetaInfo(type, entry.getKey()));
                     }
                 }
             }

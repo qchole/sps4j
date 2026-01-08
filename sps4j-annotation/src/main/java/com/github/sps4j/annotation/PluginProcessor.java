@@ -9,6 +9,7 @@ import com.github.sps4j.common.utils.YamlUtils;
 import com.github.zafarkhaja.semver.Version;
 import com.github.zafarkhaja.semver.expr.ExpressionParser;
 import com.google.auto.service.AutoService;
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -272,7 +273,8 @@ public class PluginProcessor extends AbstractProcessor {
      * @param expr The expression to validate.
      * @return {@code true} if the expression is valid, {@code false} otherwise.
      */
-    private boolean isValidVersionConstraint(String expr) {
+    @VisibleForTesting
+     static boolean isValidVersionConstraint(String expr) {
         try {
             ExpressionParser.newInstance().parse(expr);
             return true;
