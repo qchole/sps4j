@@ -42,20 +42,16 @@ public class CallUtils {
      *
      * @param classLoader The {@link ClassLoader} to set as the context class loader.
      * @param runnable The {@link Runnable} operation to execute.
-     * @param <R> The return type of the {@link Runnable} operation (always null as Runnable doesn't return).
-     * @return Always null.
      */
     @SneakyThrows
-    public static <R> R runWithContextLoader(ClassLoader classLoader, Runnable runnable) {
+    public static void runWithContextLoader(ClassLoader classLoader, Runnable runnable) {
         ClassLoader current = Thread.currentThread().getContextClassLoader();
         if (current == null) {
             runnable.run();
-            return null;
         }
         Thread.currentThread().setContextClassLoader(classLoader);
         try {
             runnable.run();
-            return null;
         } finally {
             Thread.currentThread().setContextClassLoader(current);
         }
