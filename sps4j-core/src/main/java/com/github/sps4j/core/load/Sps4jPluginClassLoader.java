@@ -159,11 +159,7 @@ public class Sps4jPluginClassLoader extends URLClassLoader {
         synchronized (onCloseActions) {
             onCloseActions.forEach(action -> {
                 try {
-                    CallUtils.executeWithContextLoader(this, () -> {
-                                action.run();
-                                return null;
-                            }
-                    );
+                    CallUtils.runWithContextLoader(this, action);
                 } catch (Exception e) {
                     log.error("Error run close action {}", action, e);
                 }
