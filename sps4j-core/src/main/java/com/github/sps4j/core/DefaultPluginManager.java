@@ -13,7 +13,6 @@ import com.github.sps4j.core.load.*;
 import com.github.sps4j.core.load.storage.LocalDirJarPackageStorage;
 import com.github.sps4j.core.load.storage.PluginPackage;
 import com.github.sps4j.core.load.storage.PluginStorage;
-import com.github.zafarkhaja.semver.Version;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +53,7 @@ public class DefaultPluginManager implements PluginManager {
     private volatile boolean productServiceInitialized = false;
     @Nonnull
     private final ProductPluginLoadService productPluginLoadService;
-    private final Map<String, Map<String, TreeMap<Version, MetaInfo>>> pluginMetaMap = new ConcurrentHashMap<>();
+    private final Map<String, Map<String, MetaInfo>> pluginMetaMap = new ConcurrentHashMap<>();
     private final Map<PluginArtifact, PluginWrapper> loaded = new ConcurrentHashMap<>();
     @Nonnull
     private final PluginStorage storage;
@@ -166,16 +165,18 @@ public class DefaultPluginManager implements PluginManager {
                     if (artifact != null && (!Objects.equals(artifact.getType(), descriptor.getType()) || !Objects.equals(artifact.getName(), descriptor.getName()))) {
                         continue;
                     }
-                    final Map<String, TreeMap<Version, MetaInfo>> nv =
+                    final Map<String, MetaInfo> typeMetaMap =
                             pluginMetaMap.computeIfAbsent(descriptor.getType(), t -> new HashMap<>());
-                    final TreeMap<Version, MetaInfo> pluginArtifactMetaMap = nv.computeIfAbsent(descriptor.getName(),
-                            n -> new TreeMap<>());
+                    final MetaInfo existMeta = typeMetaMap.get(descriptor.getName());
                     if (canLoad(productPluginLoadService, descriptor)) {
-                        MetaInfo existMeta = pluginArtifactMetaMap.get(descriptor.getVersion());
                         MetaInfo newMetaInfo = new MetaInfo(descriptor, URI.create(container.getBaseUrl()).toURL());
-                        pluginArtifactMetaMap.put(descriptor.getVersion(), newMetaInfo);
-                        if (existMeta != null && log.isDebugEnabled()) {
-                            log.debug("replace plugin metaInfo {} with {}", existMeta, newMetaInfo);
+                        if (existMeta == null || existMeta.getDescriptor().getVersion().compareTo(newMetaInfo.getDescriptor().getVersion()) < 0) {
+                            typeMetaMap.put(descriptor.getName(), newMetaInfo);
+                            if (existMeta != null) {
+                                log.info("replace plugin metaInfo {} with {}", existMeta, newMetaInfo);
+                            } else {
+                                log.info("add plugin metaInfo {}", newMetaInfo);
+                            }
                         }
 
                     } else {
@@ -200,8 +201,7 @@ public class DefaultPluginManager implements PluginManager {
     }
 
     boolean canLoad(ProductPluginLoadService pluginService, PluginDesc pd) {
-        Version pv = pluginService.productVersion();
-        return pv.satisfies(pd.getProductVersionConstraint());
+        return pluginService.productVersion().satisfies(pd.getProductVersionConstraint());
     }
 
     @Override
@@ -289,9 +289,6 @@ public class DefaultPluginManager implements PluginManager {
 
     @Override
     public void unload(@Nonnull PluginArtifact artifact) {
-        if (artifact == null) {
-            throw new IllegalArgumentException("Artifact cannot be null");
-        }
         if (!loaded.isEmpty()) {
             final PluginWrapper pluginWithMetadata = loaded.remove(artifact);
             if (pluginWithMetadata != null) {
@@ -307,9 +304,9 @@ public class DefaultPluginManager implements PluginManager {
             }
         }
         if (!pluginMetaMap.isEmpty()) {
-            final Map<String, TreeMap<Version, MetaInfo>> nameVersions = pluginMetaMap.get(artifact.getType());
-            if (MapUtils.isNotEmpty(nameVersions)) {
-                nameVersions.remove(artifact.getName());
+            final Map<String, MetaInfo> nameMeta = pluginMetaMap.get(artifact.getType());
+            if (MapUtils.isNotEmpty(nameMeta)) {
+                nameMeta.remove(artifact.getName());
             }
         }
     }
@@ -322,15 +319,6 @@ public class DefaultPluginManager implements PluginManager {
         return type;
     }
 
-    @VisibleForTesting
-    MetaInfo getToloadMetaInfo(String type, String name) {
-        PluginArtifact ar = PluginArtifact.builder()
-                .type(type)
-                .name(name)
-                .build();
-        return Optional.ofNullable(getPluginMetaInfo(ar)).orElseThrow(() -> new PluginException(PLUGIN_DESC_FOUND_MSG_PREF + ar));
-
-    }
 
     PluginWrapper getLoadedPlugin(PluginArtifact pluginArtifact) {
         return loaded.get(pluginArtifact);
@@ -341,15 +329,11 @@ public class DefaultPluginManager implements PluginManager {
         if (!isSupportedType(artifact.getType())) {
             throw new PluginException("Unsupported plugin type: " + artifact.getType() + " supported types:" + SUPPORTED_TYPES.values());
         }
-        final Map<String, TreeMap<Version, MetaInfo>> ofType = pluginMetaMap.get(artifact.getType());
-        if (MapUtils.isEmpty(ofType)) {
+        final Map<String, MetaInfo> nameMeta = pluginMetaMap.get(artifact.getType());
+        if (MapUtils.isEmpty(nameMeta)) {
             return null;
         }
-        final TreeMap<Version, MetaInfo> ofName = ofType.get(artifact.getName());
-        if (MapUtils.isEmpty(ofName)) {
-            return null;
-        }
-        return ofName.descendingMap().firstEntry().getValue();
+        return nameMeta.get(artifact.getName());
     }
 
     public synchronized PluginWrapper getPlugin(String type, String name, Sps4jPluginClassLoader classLoader, Map<String, Object> config) {
@@ -358,7 +342,7 @@ public class DefaultPluginManager implements PluginManager {
         if (loadedPlugin != null) {
             return loadedPlugin;
         }
-        MetaInfo metaInfo = getToloadMetaInfo(type, name);
+        MetaInfo metaInfo = Optional.ofNullable(getPluginMetaInfo(artifact)).orElseThrow(() -> new PluginException(PLUGIN_DESC_FOUND_MSG_PREF + artifact));
         final PluginWrapper pluginWrapper = PluginWrapper.builder()
                 .plugin(pluginLoader.load(metaInfo, classLoader, config)).metaInfo(metaInfo).build();
         loaded.put(artifact, pluginWrapper);
@@ -427,12 +411,11 @@ public class DefaultPluginManager implements PluginManager {
 
     @Override
     public synchronized List<PluginWrapper> getPlugins(@Nonnull String type, Map<String, Object> conf) {
-        final Map<String, TreeMap<Version, MetaInfo>> typeMap = pluginMetaMap.get(type);
-        if (MapUtils.isEmpty(typeMap)) {
+        final Map<String, MetaInfo> nameMeta = pluginMetaMap.get(type);
+        if (MapUtils.isEmpty(nameMeta)) {
             throw new PluginException(PLUGIN_DESC_FOUND_MSG_PREF + type);
         }
-        final List<String> names = typeMap.entrySet().stream()
-                .filter(e -> MapUtils.isNotEmpty(e.getValue())).map(Map.Entry::getKey).collect(Collectors.toList());
+        final Set<String> names = nameMeta.keySet();
         if (CollectionUtils.isEmpty(names)) {
             throw new PluginException(PLUGIN_DESC_FOUND_MSG_PREF + type);
         }
@@ -446,12 +429,10 @@ public class DefaultPluginManager implements PluginManager {
         List<MetaInfo> metas = new ArrayList<>();
         String[] types = ArrayUtils.add(rest, first);
         for (String type : types) {
-            final Map<String, TreeMap<Version, MetaInfo>> tm = pluginMetaMap.get(type);
-            if (MapUtils.isNotEmpty(tm)) {
-                for (Map.Entry<String, TreeMap<Version, MetaInfo>> entry : tm.entrySet()) {
-                    if (MapUtils.isNotEmpty(entry.getValue())) {
-                        metas.add(getToloadMetaInfo(type, entry.getKey()));
-                    }
+            final Map<String, MetaInfo> nameMap = pluginMetaMap.get(type);
+            if (MapUtils.isNotEmpty(nameMap)) {
+                for (Map.Entry<String, MetaInfo> entry : nameMap.entrySet()) {
+                    metas.add(entry.getValue());
                 }
             }
         }

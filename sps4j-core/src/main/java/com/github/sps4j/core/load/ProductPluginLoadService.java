@@ -4,6 +4,8 @@ package com.github.sps4j.core.load;
 import com.github.sps4j.common.meta.PluginDesc;
 import com.github.zafarkhaja.semver.Version;
 
+import javax.annotation.Nonnull;
+
 /**
  * An interface that provides information about the host product.
  * It is used by the plugin manager to determine plugin compatibility and perform initialization.
@@ -16,6 +18,7 @@ public interface ProductPluginLoadService {
      *
      * @return The product's semantic version.
      */
+    @Nonnull
     Version productVersion();
 
     /**
