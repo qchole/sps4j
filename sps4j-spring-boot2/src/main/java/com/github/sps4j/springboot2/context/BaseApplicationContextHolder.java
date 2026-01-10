@@ -1,9 +1,10 @@
 package com.github.sps4j.springboot2.context;
 
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
+import org.springframework.context.ApplicationContext;
 
 /**
- * A singleton holder for the base (host) application's {@link ServletWebServerApplicationContext}.
+ * A singleton holder for the base (host) application's {@link ApplicationContext}.
  * <p>
  * This allows plugins to access the base application's context, for instance, to autowire beans
  * from the base application into plugin components.
@@ -13,11 +14,11 @@ import org.springframework.boot.web.servlet.context.ServletWebServerApplicationC
 public final class BaseApplicationContextHolder {
 
     private static BaseApplicationContextHolder instance;
-    private final ServletWebServerApplicationContext baseAppContext;
+    private final  ApplicationContext baseApplicationContext;
 
 
-    private BaseApplicationContextHolder(ServletWebServerApplicationContext baseAppContext) {
-        this.baseAppContext = baseAppContext;
+    private BaseApplicationContextHolder(ApplicationContext baseCtx) {
+        this.baseApplicationContext = baseCtx;
     }
 
     /**
@@ -27,7 +28,7 @@ public final class BaseApplicationContextHolder {
      * @param applicationContext The base application's context.
      * @return The singleton instance.
      */
-    public static synchronized BaseApplicationContextHolder create(ServletWebServerApplicationContext applicationContext) {
+    public static synchronized BaseApplicationContextHolder create(ApplicationContext applicationContext) {
         if (instance == null) {
             instance = new BaseApplicationContextHolder(applicationContext);
         }
@@ -38,7 +39,7 @@ public final class BaseApplicationContextHolder {
      * Gets the singleton instance.
      *
      * @return The singleton instance.
-     * @throws IllegalStateException if the holder has not been initialized via {@link #create(ServletWebServerApplicationContext)}.
+     * @throws IllegalStateException if the holder has not been initialized via {@link #create(ApplicationContext)}.
      */
     public static BaseApplicationContextHolder getInstance() {
         if (instance == null) {
@@ -52,8 +53,8 @@ public final class BaseApplicationContextHolder {
      *
      * @return The base application context.
      */
-    public static ServletWebServerApplicationContext getBaseAppContext() {
-        return getInstance().baseAppContext;
+    public static ApplicationContext getBaseAppContext() {
+        return getInstance().baseApplicationContext;
     }
 
     /**
@@ -62,7 +63,7 @@ public final class BaseApplicationContextHolder {
      * @param obj The object to autowire.
      */
     public static void autowireFromBase(Object obj) {
-        getInstance().baseAppContext.getAutowireCapableBeanFactory().autowireBean(obj);
+        getInstance().baseApplicationContext.getAutowireCapableBeanFactory().autowireBean(obj);
     }
 
 
