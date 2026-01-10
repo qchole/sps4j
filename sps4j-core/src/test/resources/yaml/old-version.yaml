@@ -1,0 +1,5 @@
+type: test
+name: my-plugin-versioned
+version: 1.0.0
+className: com.example.PluginVersioned
+productVersionConstraint: '>=0.0.1'

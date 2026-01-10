@@ -1,0 +1,10 @@
+- type: test
+  name: multi-plugin-1
+  version: 1.0.0
+  className: com.example.Multi1
+  productVersionConstraint: '>=0.0.1'
+- type: test
+  name: multi-plugin-2
+  version: 1.0.0
+  className: com.example.Multi2
+  productVersionConstraint: '>=0.0.1'

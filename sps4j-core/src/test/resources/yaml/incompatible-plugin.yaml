@@ -1,0 +1,5 @@
+type: test
+name: my-plugin-incompatible
+version: 1.0.0
+className: com.example.PluginIncompatible
+productVersionConstraint: '>=1.0.0'

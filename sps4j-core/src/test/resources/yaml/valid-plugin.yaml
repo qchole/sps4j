@@ -1,0 +1,5 @@
+type: test
+name: my-plugin-ok
+version: 1.0.0
+className: com.example.PluginOk
+productVersionConstraint: '>=0.0.1'
