@@ -12,6 +12,9 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
@@ -49,7 +52,10 @@ public class Sps4jTomcatWebServerFactory extends TomcatServletWebServerFactory {
 
     @Override
     public WebServer getWebServer(ServletContextInitializer... initializers) {
-        Tomcat embedTomcat = ((TomcatWebServer) BaseApplicationContextHolder.getBaseAppContext().getWebServer()).getTomcat();
+        ApplicationContext baseApplicationContext = BaseApplicationContextHolder.getBaseAppContext();
+        Assert.isInstanceOf(ServletWebServerApplicationContext.class, baseApplicationContext);
+        ServletWebServerApplicationContext webServerApplicationContext = (ServletWebServerApplicationContext) baseApplicationContext;
+        Tomcat embedTomcat = ((TomcatWebServer) webServerApplicationContext.getWebServer()).getTomcat();
         prepareContext(embedTomcat.getHost(), initializers);
         return getWebServer(embedTomcat);
     }
