@@ -6,7 +6,7 @@ import com.github.sps4j.common.utils.CallUtils;
 import com.github.sps4j.core.Sps4jPlugin;
 import com.github.sps4j.core.load.DefaultPluginLoader;
 import com.github.sps4j.springboot2.SpringBoot2AppPlugin;
-import com.github.sps4j.springboot2.context.BaseApplicationContextHolder;
+import com.github.sps4j.springboot2.context.HostApplicationContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ClassUtils;
 
@@ -41,7 +41,7 @@ public class SpringAppSupportPluginLoader extends DefaultPluginLoader {
     public Sps4jPlugin pluginCreated(@Nonnull Sps4jPlugin pluginInstance, @Nonnull MetaInfo metadata) {
         if (!(pluginInstance instanceof SpringBoot2AppPlugin)) {
             try {
-                CallUtils.runWithContextLoader(pluginInstance.getClass().getClassLoader(), () -> BaseApplicationContextHolder.autowireFromBase(pluginInstance));
+                CallUtils.runWithContextLoader(pluginInstance.getClass().getClassLoader(), () -> HostApplicationContextHolder.autowireFromHost(pluginInstance));
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }

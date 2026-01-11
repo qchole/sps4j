@@ -1,4 +1,4 @@
-package com.github.sps4j.example.springmvc.base.config;
+package com.github.sps4j.example.springmvc.host.config;
 
 import com.github.sps4j.core.DefaultPluginManager;
 import com.github.sps4j.core.PluginManager;

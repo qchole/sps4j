@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>base-application</artifactId>
+    <artifactId>host-application</artifactId>
 
     <dependencies>
         <dependency>

@@ -1,7 +1,7 @@
 package com.github.sps4j.springboot2.web;
 
 
-import com.github.sps4j.springboot2.context.BaseApplicationContextHolder;
+import com.github.sps4j.springboot2.context.HostApplicationContextHolder;
 import org.apache.catalina.*;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.loader.WebappLoader;
@@ -52,7 +52,7 @@ public class Sps4jTomcatWebServerFactory extends TomcatServletWebServerFactory {
 
     @Override
     public WebServer getWebServer(ServletContextInitializer... initializers) {
-        ApplicationContext baseApplicationContext = BaseApplicationContextHolder.getBaseAppContext();
+        ApplicationContext baseApplicationContext = HostApplicationContextHolder.getBaseAppContext();
         Assert.isInstanceOf(ServletWebServerApplicationContext.class, baseApplicationContext);
         ServletWebServerApplicationContext webServerApplicationContext = (ServletWebServerApplicationContext) baseApplicationContext;
         Tomcat embedTomcat = ((TomcatWebServer) webServerApplicationContext.getWebServer()).getTomcat();
