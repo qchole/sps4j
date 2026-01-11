@@ -1,7 +1,7 @@
 package com.github.sps4j.springboot2.misc;
 
 import com.github.sps4j.core.load.Sps4jPluginClassLoader;
-import com.github.sps4j.springboot2.context.BaseApplicationContextHolder;
+import com.github.sps4j.springboot2.context.HostApplicationContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
@@ -31,7 +31,7 @@ public class Sps4jRunListener implements SpringApplicationRunListener {
     public void contextPrepared(ConfigurableApplicationContext context) {
         boolean baseApp = !(Thread.currentThread().getContextClassLoader() instanceof Sps4jPluginClassLoader);
         if (baseApp) {
-            BaseApplicationContextHolder.create((ServletWebServerApplicationContext) context);
+            HostApplicationContextHolder.create((ServletWebServerApplicationContext) context);
             log.info("Application context prepared for base application");
         } else {
             log.info("Application context prepared for plugin application, not register shutdown hook");

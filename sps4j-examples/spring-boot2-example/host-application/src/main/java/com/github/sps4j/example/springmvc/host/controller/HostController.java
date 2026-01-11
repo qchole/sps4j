@@ -1,4 +1,4 @@
-package com.github.sps4j.example.springmvc.base.controller;
+package com.github.sps4j.example.springmvc.host.controller;
 
 import com.github.sps4j.common.meta.PluginArtifact;
 import com.github.sps4j.core.PluginManager;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 
 @RestController
-public class BaseController {
+public class HostController {
     @Autowired
     private PluginManager pluginManager;
     private TestPlugin testPlugin;

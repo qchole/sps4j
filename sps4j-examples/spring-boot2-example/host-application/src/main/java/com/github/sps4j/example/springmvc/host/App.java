@@ -1,4 +1,4 @@
-package com.github.sps4j.example.springmvc.base;
+package com.github.sps4j.example.springmvc.host;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
