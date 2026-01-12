@@ -19,6 +19,7 @@
         <module>sps4j-spring-boot2</module>
         <module>sps4j-examples</module>
         <module>sps4j-examples/spring-boot2-example</module>
+        <module>sps4j-examples/greeter-api</module>
     </modules>
 
     <properties>

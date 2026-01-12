@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /plugin
+    context-path: /my-plugin
 
 spring:
   application:
