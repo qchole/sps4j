@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PluginController {
     @GetMapping("/hello")
     public String hello() {
-        return "hello plugin " +
-                Thread.currentThread().getContextClassLoader().toString();
+        return "This response comes from a controller inside the plugin!";
     }
 }

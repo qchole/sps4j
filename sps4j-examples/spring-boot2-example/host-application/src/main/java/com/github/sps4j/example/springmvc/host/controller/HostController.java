@@ -2,9 +2,10 @@ package com.github.sps4j.example.springmvc.host.controller;
 
 import com.github.sps4j.common.meta.PluginArtifact;
 import com.github.sps4j.core.PluginManager;
-import com.github.sps4j.core.test.TestPlugin;
+import com.github.sps4j.example.api.GreeterPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
@@ -13,7 +14,7 @@ import java.util.Collections;
 public class HostController {
     @Autowired
     private PluginManager pluginManager;
-    private TestPlugin testPlugin;
+    private GreeterPlugin greeter;
 
     @GetMapping("/hello")
     public String hello() {
@@ -22,23 +23,22 @@ public class HostController {
 
     @GetMapping("/load")
     public String load() {
-        testPlugin = pluginManager.getPluginUnwrapped(TestPlugin.class,
+        greeter = pluginManager.getPluginUnwrapped(GreeterPlugin.class,
                 PluginArtifact.builder()
-                .type("test").name("example").build(),
+                .type("greeter").name("spring-hello").build(),
                 Collections.emptyMap());
-        return "load ok " + testPlugin.getClass().getClassLoader().toString();
+        return "load ok " + greeter.getClass().getClassLoader().toString();
     }
 
     @GetMapping("/reset")
     public String reset() {
         pluginManager.resetAll();
-        testPlugin = null;
+        greeter = null;
         return "reset ok";
     }
 
-    @GetMapping("/test")
-    public String test() {
-        testPlugin.test();
-        return "test ok ";
+    @GetMapping("/greet/{msg}")
+    public String greet(@PathVariable String msg) {
+        return greeter.greet(msg);
     }
 }

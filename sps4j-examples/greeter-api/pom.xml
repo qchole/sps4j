@@ -5,23 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.github.sps4j</groupId>
-        <artifactId>spring-boot2-example</artifactId>
-        <version>${revision}</version>
+        <artifactId>sps4j</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>host-application</artifactId>
-
+    <artifactId>greeter-api</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.github.sps4j</groupId>
-            <artifactId>sps4j-spring-boot2</artifactId>
+            <artifactId>sps4j-annotation</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.sps4j</groupId>
-            <artifactId>greeter-api</artifactId>
-            <version>${revision}</version>
+            <artifactId>sps4j-core</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>
