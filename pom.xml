@@ -20,6 +20,7 @@
         <module>sps4j-examples</module>
         <module>sps4j-examples/spring-boot2-example</module>
         <module>sps4j-examples/greeter-api</module>
+        <module>sps4j-examples/multi-load</module>
     </modules>
 
     <properties>

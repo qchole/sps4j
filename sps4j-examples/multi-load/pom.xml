@@ -6,16 +6,13 @@
     <parent>
         <groupId>com.github.sps4j</groupId>
         <artifactId>sps4j</artifactId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sps4j-examples</artifactId>
+    <artifactId>multi-load</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>multi-load/hello-plugin</module>
-        <module>multi-load/bye-plugin</module>
-        <module>multi-load/host-app</module>
-    </modules>
+
 
 
 </project>
