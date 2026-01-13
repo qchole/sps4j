@@ -13,6 +13,12 @@
     <artifactId>multi-load</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>hello-plugin</module>
+        <module>bye-plugin</module>
+        <module>host-app</module>
+    </modules>
+
 
 
 </project>

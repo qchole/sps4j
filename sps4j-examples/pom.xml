@@ -12,9 +12,9 @@
     <artifactId>sps4j-examples</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>multi-load/hello-plugin</module>
-        <module>multi-load/bye-plugin</module>
-        <module>multi-load/host-app</module>
+        <module>greeter-api</module>
+        <module>multi-load</module>
+        <module>spring-boot2-example</module>
     </modules>
 
 
