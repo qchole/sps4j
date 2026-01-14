@@ -226,7 +226,6 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
           <version>1.0.0</version>
       </dependency>
     </dependencies>
-- ```
 
 - 添加启动类
   ```java
@@ -277,8 +276,8 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   ```
 
 #### 步骤 4: 构建和运行
-1.  **构建插件**: 在 `spring-hello-plugin` 模块中运行 `mvn clean package`。
-2.  **部署插件**: 将 `spring-hello-plugin-1.0.0.jar` 复制到主应用可访问的目录下。
+1.  **构建插件**: 在插件项目中运行 `mvn clean package`。
+2.  **部署插件**: 将插件jar包复制到主应用可访问的目录下。
 3.  **运行主应用**: 启动Spring Boot主应用。
 
 #### 步骤 5: 访问插件的Web端点
@@ -295,10 +294,10 @@ This response comes from a controller inside the plugin!
 
 ## 📖 示例
 
-一个完整的、可运行的示例可以在 `sps4j-examples/spring-boot2-example` 目录下找到。该示例包含了一个基础的主应用（`base-application`）和一个插件应用（`plugin-app`），完整地演示了上述所有步骤。
+一个完整的、可运行的示例可以在 `sps4j-examples/spring-boot2-example` 目录下找到。该示例包含了一个基础的主应用（`host-application`）和一个插件应用（`plugin-app`），完整地演示了上述所有步骤。
 
 ## 🛠️ 从源码构建
 
 1.  克隆本项目: `git clone https://github.com/Allan-QLB/sps4j.git`
 2.  进入项目根目录: `cd sps4j`
-3.  使用Maven进行构建: `mvn clean install`
+3.  使用Maven进行构建: `mvn clean package`
