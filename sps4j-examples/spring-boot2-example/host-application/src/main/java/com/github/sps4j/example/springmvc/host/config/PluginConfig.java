@@ -15,7 +15,6 @@ import java.io.IOException;
 
 @Configuration
 public class PluginConfig {
-    private static final String PROP_PLUGIN_LOCATION = "example.plugin.location";
     @Autowired
     private ResourceLoader resourceLoader;
 
