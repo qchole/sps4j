@@ -187,7 +187,8 @@ public class PluginProcessor extends AbstractProcessor {
      * @throws IllegalStateException if the plugin interface cannot be detected, if there are multiple plugin interfaces,
      *                               or if the plugin does not implement {@link com.github.sps4j.core.Sps4jPlugin}.
      */
-   private Pair<String, String> detectPluginInterfaceType(@Nonnull TypeElement element) {
+    @VisibleForTesting
+     Pair<String, String> detectPluginInterfaceType(@Nonnull TypeElement element) {
         List<TypeElement> classCandidates = new ArrayList<>();
         TypeElement current = element;
         while (current!= null && !current.getQualifiedName().toString().startsWith("java")
@@ -218,7 +219,8 @@ public class PluginProcessor extends AbstractProcessor {
      * @return A {@link Pair} containing the plugin type and the interface name, or {@code null} if not found.
      * @throws IllegalStateException if multiple plugin interfaces are found.
      */
-    private static Pair<String, String> findPluginInterfaceFrom(Map<String, TypeElement> interfaces) {
+    @VisibleForTesting
+    static Pair<String, String> findPluginInterfaceFrom(Map<String, TypeElement> interfaces) {
         Pair<String, String> found = null;
         for (Map.Entry<String, TypeElement> ent : interfaces.entrySet()) {
             final List<? extends AnnotationMirror> annotationMirrors = ent.getValue().getAnnotationMirrors();
