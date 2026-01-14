@@ -240,7 +240,6 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   ```java
     @Configuration
     public class PluginConfig {
-        private static final String PROP_PLUGIN_LOCATION = "example.plugin.location";
         @Autowired
         private ResourceLoader resourceLoader;
 
