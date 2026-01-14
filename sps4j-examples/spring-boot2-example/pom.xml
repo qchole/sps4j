@@ -13,8 +13,8 @@
     <artifactId>spring-boot2-example</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>host-application</module>
         <module>plugin-app</module>
+        <module>host-application</module>
     </modules>
 
 

@@ -24,5 +24,55 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/resources/plugin</outputDirectory>
+                           <resources>
+                               <resource>
+                                   <directory>${project.basedir}/../hello-plugin/target</directory>
+                                   <includes>
+                                       <include>*.jar</include>
+                                   </includes>
+                               </resource>
+                               <resource>
+                                   <directory>${project.basedir}/../bye-plugin/target</directory>
+                                   <includes>
+                                       <include>*.jar</include>
+                                   </includes>
+                               </resource>
+                           </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <directory>${project.basedir}/src/main/resources/plugin</directory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

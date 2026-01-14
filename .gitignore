@@ -3,3 +3,4 @@
 **/.ci-friendly-pom.xml
 **/.DS_Store
 .vscode/
+sps4j-examples/**/*.jar
