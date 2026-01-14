@@ -58,17 +58,17 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
 你可以为同一个接口提供多个实现。只需确保每个实现的 `@Sps4jPlugin` 注解中的 `name` 是唯一的。示例如下：
 
 - **实现一: `hello-plugin`**
-  - maven依赖：继承`sps4j-plugin-parent`并添加`greeter-api`依赖，scope为`provided`。
-  - 实现接口:
-    ```java
-    @Sps4jPlugin(name = "hello", version = "1.0.0", productVersionConstraint = ">=1.0")
-    public class HelloPlugin implements GreeterPlugin {
-        @Override
-        public String greet(String name) {
-            return "Hello, " + name + "!";
-        }
-    }
-    ```
+
+  maven依赖继承`sps4j-plugin-parent`并添加`greeter-api`依赖，scope为`provided`。 然后实现接口插件接口。
+  ```java
+  @Sps4jPlugin(name = "hello", version = "1.0.0", productVersionConstraint = ">=1.0")
+  public class HelloPlugin implements GreeterPlugin {
+      @Override
+      public String greet(String name) {
+          return "Hello, " + name + "!";
+      }
+  }
+  ```
 
 - **实现二: `bye-plugin`**
     ```java
