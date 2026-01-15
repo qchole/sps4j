@@ -4,6 +4,7 @@ package com.github.sps4j.springboot2;
 import com.github.sps4j.common.meta.MetaInfo;
 import com.github.sps4j.core.Sps4jPlugin;
 import com.github.sps4j.core.load.Sps4jPluginClassLoader;
+import com.github.sps4j.springboot2.context.PluginSpringbootBootstrapContext;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -57,11 +58,17 @@ public abstract class SpringBoot2AppPlugin implements Sps4jPlugin {
         } else {
             springApplication.setWebApplicationType(WebApplicationType.NONE);
         }
-        applicationContext = springApplication.run();
-        ((Sps4jPluginClassLoader) this.getClass().getClassLoader()).addOnCloseAction(() -> {
-            log.info("Stop plugin application context {}", applicationContext.getApplicationName());
-            applicationContext.stop();
-        });
+        PluginSpringbootBootstrapContext.setCurrentPluginMetaInfo(metadata);
+        try {
+            applicationContext = springApplication.run();
+            ((Sps4jPluginClassLoader) this.getClass().getClassLoader()).addOnCloseAction(() -> {
+                log.info("Stop plugin application context {}", applicationContext.getApplicationName());
+                applicationContext.close();
+            });
+        } finally {
+            PluginSpringbootBootstrapContext.removeCurrentPluginMetaInfo();
+        }
+
     }
 
 }
