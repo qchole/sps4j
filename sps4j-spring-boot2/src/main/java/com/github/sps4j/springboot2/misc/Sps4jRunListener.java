@@ -1,7 +1,9 @@
 package com.github.sps4j.springboot2.misc;
 
+import com.github.sps4j.common.meta.MetaInfo;
 import com.github.sps4j.core.load.Sps4jPluginClassLoader;
 import com.github.sps4j.springboot2.context.HostApplicationContextHolder;
+import com.github.sps4j.springboot2.context.PluginSpringbootBootstrapContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
@@ -32,18 +34,19 @@ public class Sps4jRunListener implements SpringApplicationRunListener {
 
     @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
-        boolean baseApp = !(Thread.currentThread().getContextClassLoader() instanceof Sps4jPluginClassLoader);
-        if (baseApp) {
+        boolean host = !(Thread.currentThread().getContextClassLoader() instanceof Sps4jPluginClassLoader);
+        if (host) {
             HostApplicationContextHolder.create(context);
-            log.info("Application context prepared for base application");
+            log.info("Application context prepared for host application");
         } else {
-            log.info("Application context prepared for plugin application, not register shutdown hook");
+            MetaInfo metaInfo = PluginSpringbootBootstrapContext.getCurrentPluginMetaInfo();
+            log.info("Application context prepared for plugin application");
             Map<String, Object> source = new HashMap<>();
             source.put("spring.application.admin.jmx-name",
-                    "org.springframework.boot:type=Admin,name=" + context.getApplicationName());
+                    "org.springframework.boot:type=Admin,name="
+                            + metaInfo.getDescriptor().getType() + "/" + metaInfo.getDescriptor().getName());
             context.getEnvironment().getPropertySources()
                     .addFirst(new MapPropertySource("sps4j-plugin-override", source));
-            application.setRegisterShutdownHook(false);
         }
     }
 }
