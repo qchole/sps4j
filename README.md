@@ -34,7 +34,7 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   ```xml
   <dependencies>
       <dependency>
-          <groupId>com.github.sps4j</groupId>
+          <groupId>io.github.qchole</groupId>
           <artifactId>sps4j-core</artifactId>
           <version>${sps4j.version}</version>
           <scope>provided</scope>
@@ -44,8 +44,8 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
 
 - **定义插件接口**:
   ```java
-  import com.github.sps4j.annotation.Sps4jPluginInterface;
-  import com.github.sps4j.core.Sps4jPlugin;
+  import io.github.sps4j.annotation.Sps4jPluginInterface;
+  import io.github.sps4j.core.Sps4jPlugin;
 
   @Sps4jPluginInterface("greeter")
   public interface GreeterPlugin extends Sps4jPlugin {
@@ -89,12 +89,12 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   ```xml
   <dependencies>
       <dependency>
-          <groupId>com.github.sps4j</groupId>
+          <groupId>io.github.qchole</groupId>
           <artifactId>sps4j-core</artifactId>
           <version>${sps4j.version}</version>
       </dependency>
       <dependency>
-          <groupId>com.example</groupId>
+          <groupId>io.github.qchole</groupId>
           <artifactId>greeter-api</artifactId>
           <version>1.0.0</version>
       </dependency>
@@ -156,19 +156,19 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   继承`sps4j-plugin-parent`，并添加`sps4j-spring-boot2` 依赖
   ```xml
   <parent>
-      <groupId>com.github.sps4j</groupId>
+      <groupId>io.github.qchole</groupId>
       <artifactId>sps4j-plugin-parent</artifactId>
       <version>${sps4j.version}</version>
   </parent>
   <dependencies>
       <dependency>
-          <groupId>com.example</groupId>
+          <groupId>io.github.qchole</groupId>
           <artifactId>greeter-api</artifactId>
           <version>1.0.0</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
-          <groupId>com.github.sps4j</groupId>
+          <groupId>io.github.qchole</groupId>
           <artifactId>sps4j-spring-boot2</artifactId>
           <scope>provided</scope>
       </dependency>
@@ -216,12 +216,12 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
   ```xml
   <dependencies>
         <dependency>
-            <groupId>com.github.sps4j</groupId>
+            <groupId>io.github.qchole</groupId>
             <artifactId>sps4j-spring-boot2</artifactId>
             <version>${sps4j.version}</version>
         </dependency>
         <dependency>
-          <groupId>com.example</groupId>
+          <groupId>io.github.qchole</groupId>
           <artifactId>greeter-api</artifactId>
           <version>1.0.0</version>
       </dependency>
@@ -297,6 +297,6 @@ This response comes from a controller inside the plugin!
 
 ## 🛠️ 从源码构建
 
-1.  克隆本项目: `git clone https://github.com/Allan-QLB/sps4j.git`
+1.  克隆本项目: `git clone https://github.com/qchole/sps4j.git`
 2.  进入项目根目录: `cd sps4j`
 3.  使用Maven进行构建: `mvn clean package`
