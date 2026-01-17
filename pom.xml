@@ -47,7 +47,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <revision.version>0.0.1</revision.version>
+        <revision.version>0.1.0</revision.version>
         <revision.modifier>SNAPSHOT</revision.modifier>
         <revision>${revision.version}-${revision.modifier}</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
