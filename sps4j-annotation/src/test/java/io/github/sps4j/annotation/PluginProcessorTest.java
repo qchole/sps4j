@@ -11,9 +11,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Types;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -132,12 +130,12 @@ class PluginProcessorTest {
         when(objectElement.getQualifiedName()).thenReturn(new NameMock("java.lang.Object")); // Stop condition
 
         // 4. Link interfaces with getInterfaces()
-        List myPluginInterfaces = List.of(myPluginInterfaceMirror);
+        List myPluginInterfaces = Collections.singletonList(myPluginInterfaceMirror);
         when(myPluginElement.getInterfaces()).thenReturn(myPluginInterfaces);
         when(myPluginInterfaceMirror.toString()).thenReturn("com.example.MyPluginInterface");
         when(typeUtils.asElement(myPluginInterfaceMirror)).thenReturn(myPluginInterfaceElement);
 
-        List myPluginInterfaceInterfaces = List.of(sps4jPluginMirror);
+        List myPluginInterfaceInterfaces = Collections.singletonList(sps4jPluginMirror);
         when(myPluginInterfaceElement.getInterfaces()).thenReturn(myPluginInterfaceInterfaces);
         when(sps4jPluginMirror.toString()).thenReturn(InterfaceAnnotationProcessor.PLUGIN_BASE_INTERFACE);
         when(typeUtils.asElement(sps4jPluginMirror)).thenReturn(sps4jPluginElement);
@@ -184,7 +182,7 @@ class PluginProcessorTest {
         when(objectElement.getQualifiedName()).thenReturn(new NameMock("java.lang.Object"));
 
 
-        List myPluginInterfaces = List.of(myPluginInterfaceMirror);
+        List myPluginInterfaces = Collections.singletonList(myPluginInterfaceMirror);
         when(myPluginElement.getInterfaces()).thenReturn(myPluginInterfaces);
         when(myPluginInterfaceMirror.toString()).thenReturn("com.example.MyPluginInterface");
         when(typeUtils.asElement(myPluginInterfaceMirror)).thenReturn(myPluginInterfaceElement);
@@ -221,12 +219,12 @@ class PluginProcessorTest {
         when(typeUtils.asElement(objectMirror)).thenReturn(objectElement);
         when(objectElement.getQualifiedName()).thenReturn(new NameMock("java.lang.Object"));
 
-        List myPluginInterfaces = List.of(myInterfaceMirror);
+        List myPluginInterfaces = Collections.singletonList(myInterfaceMirror);
         when(myPluginElement.getInterfaces()).thenReturn(myPluginInterfaces);
         when(myInterfaceMirror.toString()).thenReturn("com.example.MyInterface");
         when(typeUtils.asElement(myInterfaceMirror)).thenReturn(myInterfaceElement);
 
-        List myInterfaceInterfaces = List.of(sps4jPluginMirror);
+        List myInterfaceInterfaces = Collections.singletonList(sps4jPluginMirror);
         when(myInterfaceElement.getInterfaces()).thenReturn(myInterfaceInterfaces); // Extends base
         when(sps4jPluginMirror.toString()).thenReturn(InterfaceAnnotationProcessor.PLUGIN_BASE_INTERFACE);
         when(typeUtils.asElement(sps4jPluginMirror)).thenReturn(sps4jPluginElement);
@@ -252,7 +250,7 @@ class PluginProcessorTest {
         List annotationMirrors = Collections.singletonList(pluginAnnotationMirror);
         when(pluginInterfaceElement.getAnnotationMirrors()).thenReturn(annotationMirrors);
 
-        Map<String, TypeElement> interfaces = Map.of("com.example.MyPluginInterface", pluginInterfaceElement);
+        Map<String, TypeElement> interfaces = Collections.singletonMap("com.example.MyPluginInterface", pluginInterfaceElement);
 
         // --- EXECUTION ---
         Pair<String, String> result = PluginProcessor.findPluginInterfaceFrom(interfaces);
@@ -274,7 +272,7 @@ class PluginProcessorTest {
         List annotationMirrors = Collections.singletonList(pluginAnnotationMirror);
         when(pluginInterfaceElement.getAnnotationMirrors()).thenReturn(annotationMirrors);
 
-        Map<String, TypeElement> interfaces = Map.of("com.example.MyPluginInterface", pluginInterfaceElement);
+        Map<String, TypeElement> interfaces = Collections.singletonMap("com.example.MyPluginInterface", pluginInterfaceElement);
 
         // --- EXECUTION ---
         Pair<String, String> result = PluginProcessor.findPluginInterfaceFrom(interfaces);
@@ -290,7 +288,7 @@ class PluginProcessorTest {
         // --- MOCK SETUP ---
         TypeElement nonPluginInterfaceElement = mock(TypeElement.class);
         when(nonPluginInterfaceElement.getAnnotationMirrors()).thenReturn(Collections.emptyList());
-        Map<String, TypeElement> interfaces = Map.of("com.example.MyInterface", nonPluginInterfaceElement);
+        Map<String, TypeElement> interfaces = Collections.singletonMap("com.example.MyInterface", nonPluginInterfaceElement);
 
         // --- EXECUTION ---
         Pair<String, String> result = PluginProcessor.findPluginInterfaceFrom(interfaces);
@@ -318,7 +316,7 @@ class PluginProcessorTest {
         when(annotationType2.asElement()).thenReturn(annotationElement2);
         when(annotationElement2.asType()).thenReturn(annotationType2);
         when(annotationType2.toString()).thenReturn(Sps4jPluginInterface.class.getCanonicalName());
-        Map values2 = Map.of(valueExecutableElement2, annotationValue2);
+        Map values2 = Collections.singletonMap(valueExecutableElement2, annotationValue2);
         when(pluginAnnotationMirror2.getElementValues()).thenReturn(values2);
         when(valueExecutableElement2.getSimpleName()).thenReturn(new NameMock("value"));
         when(annotationValue2.getValue()).thenReturn("plugin-2");
@@ -327,10 +325,12 @@ class PluginProcessorTest {
         List annotationMirrors2 = Collections.singletonList(pluginAnnotationMirror2);
         when(pluginInterface2.getAnnotationMirrors()).thenReturn(annotationMirrors2);
 
-        Map<String, TypeElement> interfaces = Map.of(
-                "com.example.Plugin1", pluginInterface1,
-                "com.example.Plugin2", pluginInterface2
-        );
+        Map<String, TypeElement> interfaces = new HashMap<String, TypeElement>() {
+            {
+                put("com.example.Plugin1", pluginInterface1);
+                put("com.example.Plugin2", pluginInterface2);
+            }
+        };
 
         // --- EXECUTION & VERIFICATION ---
         assertThrows(IllegalStateException.class, () -> PluginProcessor.findPluginInterfaceFrom(interfaces));
@@ -355,7 +355,7 @@ class PluginProcessorTest {
         when(annotationType.asElement()).thenReturn(annotationElement);
         when(annotationElement.asType()).thenReturn(annotationType);
         when(annotationType.toString()).thenReturn(Sps4jPluginInterface.class.getCanonicalName());
-        Map values = Map.of(valueExecutableElement, annotationValue);
+        Map values = Collections.singletonMap(valueExecutableElement, annotationValue);
         when(pluginAnnotationMirror.getElementValues()).thenReturn(values);
         when(valueExecutableElement.getSimpleName()).thenReturn(new NameMock("value"));
         when(annotationValue.getValue()).thenReturn(value);
