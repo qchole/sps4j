@@ -10,6 +10,30 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/qchole/sps4j.git</connection>
+        <developerConnection>scm:git:https://github.com/qchole/sps4j.git</developerConnection>
+        <url>https://github.com/qchole/sps4j</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>qchole</id>
+            <name>Allan QLB</name>
+            <email>qinlibin0223@gmail.com</email>
+        </developer>
+    </developers>
+
     <modules>
         <module>sps4j-core</module>
         <module>sps4j-annotation</module>
@@ -354,8 +378,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
         </plugins>
     </build>
 
