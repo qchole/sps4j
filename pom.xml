@@ -73,6 +73,7 @@
         <mokito.version>5.21.0</mokito.version>
         <source.skip>false</source.skip>
         <javadoc.disabled>false</javadoc.disabled>
+        <deploy.disabled>false</deploy.disabled>
         <source.plugin.version>3.3.0</source.plugin.version>
     </properties>
 
@@ -422,6 +423,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <skip>${deploy.disabled}</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

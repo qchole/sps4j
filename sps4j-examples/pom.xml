@@ -20,6 +20,7 @@
     <properties>
         <source.skip>true</source.skip>
         <javadoc.disabled>true</javadoc.disabled>
+        <deploy.disabled>true</deploy.disabled>
     </properties>
 
 
