@@ -452,6 +452,18 @@
                     <waitUntil>published</waitUntil>
                     <centralSnapshotsUrl>https://central.sonatype.com/repository/maven-snapshots/</centralSnapshotsUrl>
                     <deploymentName>${project.artifactId} (${project.version})</deploymentName>
+                    <excludeArtifacts>
+                        <artifact>sps4j-test</artifact>
+                        <artifact>sps4j-example</artifact>
+                        <artifact>greeter-api</artifact>
+                        <artifact>multi-load</artifact>
+                        <artifact>spring-boot2-example</artifact>
+                        <artifact>bye-plugin</artifact>
+                        <artifact>hello-plugin</artifact>
+                        <artifact>host-app</artifact>
+                        <artifact>host-application</artifact>
+                        <artifact>plugin-app</artifact>
+                    </excludeArtifacts>
                 </configuration>
             </plugin>
         </plugins>
