@@ -454,7 +454,7 @@
                     <deploymentName>${project.artifactId} (${project.version})</deploymentName>
                     <excludeArtifacts>
                         <artifact>sps4j-test</artifact>
-                        <artifact>sps4j-example</artifact>
+                        <artifact>sps4j-examples</artifact>
                         <artifact>greeter-api</artifact>
                         <artifact>multi-load</artifact>
                         <artifact>spring-boot2-example</artifact>
