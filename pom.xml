@@ -72,6 +72,7 @@
         <clean.plugin.version>3.3.2</clean.plugin.version>
         <mokito.version>5.21.0</mokito.version>
         <source.skip>false</source.skip>
+        <javadoc.disabled>false</javadoc.disabled>
         <source.plugin.version>3.3.0</source.plugin.version>
     </properties>
 
@@ -364,6 +365,26 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <skip>${javadoc.disabled}</skip>
+                    <doclint>none</doclint>
+                    <failOnWarnings>false</failOnWarnings>
+                    <!-- Needed when run inside Intellij IDEA -->
+                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>

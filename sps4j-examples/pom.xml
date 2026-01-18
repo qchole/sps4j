@@ -19,6 +19,7 @@
 
     <properties>
         <source.skip>true</source.skip>
+        <javadoc.disabled>true</javadoc.disabled>
     </properties>
 
 
