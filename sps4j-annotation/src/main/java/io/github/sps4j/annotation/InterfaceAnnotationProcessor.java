@@ -57,7 +57,7 @@ public class InterfaceAnnotationProcessor extends AbstractProcessor {
                 }
                 Sps4jPluginInterface annotation = element.getAnnotation(Sps4jPluginInterface.class);
                 //todo fail on dup
-                providers.put(StringUtils.isNotBlank(annotation.value()) ? annotation.value() : element.getSimpleName().toString(),
+                providers.put(StringUtils.isNotBlank(annotation.value()) ? annotation.value() : ((TypeElement) element).getQualifiedName().toString(),
                         typeElement.getQualifiedName().toString());
             }
         }
