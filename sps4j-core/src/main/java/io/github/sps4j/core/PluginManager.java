@@ -22,6 +22,34 @@ public interface PluginManager {
     }
 
     /**
+     * Check plugin artifact for update.
+     * @param artifact The artifact to check.
+     * @return The new meta info of the artifact, or {@code null} if there is no new version.
+     */
+    MetaInfo checkForUpdate(@Nonnull PluginArtifact artifact);
+
+    /**
+     * Check update for all plugins
+     * @return A list of {@link MetaInfo} of the plugins with new version.
+     */
+    List<MetaInfo> checkForUpdate();
+
+    /**
+     * Update the plugin for the specified artifact.
+     * @param artifact The artifact of plugin to update.
+     * @return the new wrapped plugin, or null if no new version.
+     */
+    PluginWrapper update(@Nonnull PluginArtifact artifact);
+
+    /**
+     * Update all the plugins.
+     * @return A list of the new wrapped plugins, maybe empty if all plugins have no new version.
+     */
+    List<PluginWrapper> update();
+
+
+
+    /**
      * Resets the entire plugin manager. It unloads all currently loaded plugins and reloads all metadata.
      */
     void resetAll();

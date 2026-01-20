@@ -8,7 +8,7 @@ import io.github.sps4j.core.load.ProductPluginLoadService;
 import io.github.sps4j.core.load.Sps4jPluginLoader;
 import io.github.sps4j.core.load.PluginWrapper;
 import io.github.sps4j.core.load.storage.PluginPackage;
-import io.github.sps4j.core.load.storage.PluginStorage;
+import io.github.sps4j.core.load.storage.PluginRepository;
 import io.github.sps4j.core.test.TestPlugin;
 import com.github.zafarkhaja.semver.Version;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class DefaultPluginManagerTest {
     @Mock
     private ProductPluginLoadService productPluginLoadService;
     @Mock
-    private PluginStorage pluginStorage;
+    private PluginRepository pluginStorage;
     @Mock
     private Sps4jPluginLoader sps4jPluginLoader;
     @Mock
@@ -69,7 +69,7 @@ class DefaultPluginManagerTest {
     void testLoad() {
         URL url = ClassLoader.getSystemClassLoader().getResource("plugins");
         assertNotNull(url);
-        DefaultPluginManager pluginManager = new DefaultPluginManager(url.toString(), () -> Version.parse("0.0.1"));
+        DefaultPluginManager pluginManager = new DefaultPluginManager(url.getPath(), () -> Version.parse("0.0.1"));
         PluginWrapper test = pluginManager.getPlugin("test", "MyTest");
         assertNotNull(test.getPluginAs(TestPlugin.class).test());
         pluginManager.unload(TestPlugin.class);
@@ -194,10 +194,10 @@ class DefaultPluginManagerTest {
             setupMockPackage(pkgWithMultipleDescriptors, "file:/repo/multi.jar", multiPluginYaml);
 
             List<PluginPackage> packages = Arrays.asList(pkgWithValidPlugin, pkgWithIncompatiblePlugin, pkgWithOldVersion, pkgWithNewVersion, pkgWithoutDescriptor, pkgWithMultipleDescriptors);
-            when(pluginStorage.listPackages(anyString())).thenReturn(packages);
+            when(pluginStorage.listPackages()).thenReturn(packages);
 
             // When: The DefaultPluginManager is initialized
-            DefaultPluginManager pluginManager = new DefaultPluginManager("file:/repo/", productPluginLoadService, true, pluginStorage, sps4jPluginLoader);
+            DefaultPluginManager pluginManager = new DefaultPluginManager(productPluginLoadService, true, pluginStorage, sps4jPluginLoader);
 
             // Then: The metadata should be loaded according to the rules
             // 1. Valid plugin is loaded

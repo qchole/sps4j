@@ -26,4 +26,5 @@ public class MetaInfo {
      */
     @Nonnull
     private final URL url;
+
 }

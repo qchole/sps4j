@@ -115,5 +115,9 @@ public class PluginDesc {
     public int hashCode() {
         return Objects.hash(type, name, version, productVersionConstraint);
     }
+
+    public PluginArtifact toArtifact() {
+        return PluginArtifact.builder().type(type).name(name).build();
+    }
 }
 
