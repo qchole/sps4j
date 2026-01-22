@@ -326,6 +326,91 @@ class DefaultPluginManagerTest {
         assertTrue(updates.stream().anyMatch(m -> m.getDescriptor().getName().equals("plugin2") && m.getDescriptor().getVersion().toString().equals("1.0.0")));
     }
 
+    @Test
+    void update_artifact_shouldUpdatePluginWhenUpdateExists() throws Exception {
+        // Given
+        PluginArtifact artifact = new PluginArtifact("test", "my-plugin");
+        DefaultPluginManager pluginManager = new DefaultPluginManager(productPluginLoadService, false, pluginStorage, sps4jPluginLoader);
+        DefaultPluginManager spyPluginManager = spy(pluginManager);
+
+        MetaInfo newMeta = createMetaInfo(artifact.getType(), artifact.getName(), "1.1.0", "file:/repo/new.jar");
+        PluginWrapper expectedWrapper = PluginWrapper.builder().metaInfo(newMeta).build();
+
+        doReturn(newMeta).when(spyPluginManager).checkForUpdate(artifact);
+        doNothing().when(spyPluginManager).unload(artifact);
+        doReturn(new HashMap<>()).when(spyPluginManager).loadMetadata(artifact);
+        doReturn(expectedWrapper).when(spyPluginManager).getPlugin(artifact);
+
+        // When
+        PluginWrapper result = spyPluginManager.update(artifact);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(expectedWrapper, result);
+        verify(spyPluginManager).unload(artifact);
+        verify(spyPluginManager).loadMetadata(artifact);
+        verify(spyPluginManager).getPlugin(artifact);
+    }
+
+    @Test
+    void update_artifact_shouldReturnNullWhenNoUpdate() {
+        // Given
+        PluginArtifact artifact = new PluginArtifact("test", "my-plugin");
+        DefaultPluginManager pluginManager = new DefaultPluginManager(productPluginLoadService, false, pluginStorage, sps4jPluginLoader);
+        DefaultPluginManager spyPluginManager = spy(pluginManager);
+
+        doReturn(null).when(spyPluginManager).checkForUpdate(artifact);
+
+        // When
+        PluginWrapper result = spyPluginManager.update(artifact);
+
+        // Then
+        assertNull(result);
+        verify(spyPluginManager, never()).unload(any(PluginArtifact.class));
+        verify(spyPluginManager, never()).loadMetadata(any(PluginArtifact.class));
+        verify(spyPluginManager, never()).getPlugin(any(PluginArtifact.class));
+    }
+
+    @Test
+    void update_all_shouldUpdateAllPluginsWithUpdates() throws Exception {
+        // Given
+        PluginArtifact artifact1 = new PluginArtifact("test", "plugin1");
+        PluginArtifact artifact2 = new PluginArtifact("test", "plugin2");
+
+        DefaultPluginManager pluginManager = new DefaultPluginManager(productPluginLoadService, false, pluginStorage, sps4jPluginLoader);
+        DefaultPluginManager spyPluginManager = spy(pluginManager);
+
+        MetaInfo newMeta1 = createMetaInfo(artifact1.getType(), artifact1.getName(), "1.1.0", "file:/repo/plugin1-new.jar");
+        MetaInfo newMeta2 = createMetaInfo(artifact2.getType(), artifact2.getName(), "1.0.0", "file:/repo/plugin2-new.jar");
+        List<MetaInfo> updates = Arrays.asList(newMeta1, newMeta2);
+
+        PluginWrapper wrapper1 = PluginWrapper.builder().metaInfo(newMeta1).build();
+        PluginWrapper wrapper2 = PluginWrapper.builder().metaInfo(newMeta2).build();
+
+        doReturn(updates).when(spyPluginManager).checkForUpdate();
+        doNothing().when(spyPluginManager).unload(any(PluginArtifact.class));
+        doReturn(wrapper1).when(spyPluginManager).getPlugin(artifact1);
+        doReturn(wrapper2).when(spyPluginManager).getPlugin(artifact2);
+
+
+        // When
+        List<PluginWrapper> updatedWrappers = spyPluginManager.update();
+
+        // Then
+        assertNotNull(updatedWrappers);
+        assertEquals(2, updatedWrappers.size());
+        assertTrue(updatedWrappers.contains(wrapper1));
+        assertTrue(updatedWrappers.contains(wrapper2));
+
+        verify(spyPluginManager, times(2)).unload(any(PluginArtifact.class));
+        verify(spyPluginManager).unload(artifact1);
+        verify(spyPluginManager).unload(artifact2);
+        verify(spyPluginManager, times(2)).getPlugin(any(PluginArtifact.class));
+        verify(spyPluginManager).getPlugin(artifact1);
+        verify(spyPluginManager).getPlugin(artifact2);
+    }
+
+
 
     private MetaInfo createMetaInfo(String type, String name, String version, String url) throws MalformedURLException {
         return new MetaInfo(
