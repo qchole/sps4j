@@ -10,7 +10,7 @@ sps4j 是一个为Java设计的轻量级、简单易用的插件化框架。它�
 - **Spring Boot集成**:
     - 插件本身可以是一个完整的Spring Boot应用（通过继承`SpringBoot2AppPlugin`）。
     - 支持将插件的Web层（如Controller）无缝集成到主应用的Tomcat实例中。
-    - 支持在普通插件中访问主应用的bean。
+    - 支持在插件中访问主应用的bean。
 - **版本控制**: 插件可以声明其与主应用兼容的版本范围，实现平滑升级。
 
 ## 📦 模块介绍
