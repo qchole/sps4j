@@ -169,6 +169,7 @@ class DefaultPluginManagerTest {
         try {
             // Given: Various plugin packages representing different scenarios
             when(productPluginLoadService.productVersion()).thenReturn(Version.parse("0.0.1"));
+            when(productPluginLoadService.canLoad(any(PluginDesc.class))).thenReturn(true);
             doNothing().when(productPluginLoadService).init();
 
             // Scenario 1: Valid plugin

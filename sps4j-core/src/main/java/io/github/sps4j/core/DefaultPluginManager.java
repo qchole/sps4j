@@ -209,7 +209,8 @@ public class DefaultPluginManager implements PluginManager {
     }
 
     boolean canLoad(ProductPluginLoadService pluginService, PluginDesc pd) {
-        return pluginService.productVersion().satisfies(pd.getProductVersionConstraint());
+        return pluginService.productVersion().satisfies(pd.getProductVersionConstraint())
+                && pluginService.canLoad(pd);
     }
 
     @Override
