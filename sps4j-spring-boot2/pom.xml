@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>sps4j-spring-boot2</artifactId>
+    <name>SPS4J Springboot2</name>
+    <description>Springboot2 starter for SPS4J</description>
 
     <dependencies>
         <dependency>

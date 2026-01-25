@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>sps4j-common</artifactId>
+    <name>SPS4J Common</name>
+    <description>Common utils for SPS4J</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>sps4j-annotation</artifactId>
+    <name>SPS4J Annotation</name>
+    <description>Annotation processors for SPS4J</description>
 
 
     <dependencies>

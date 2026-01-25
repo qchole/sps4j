@@ -9,6 +9,9 @@
     <artifactId>sps4j</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
+    <name>SPS4J Parent</name>
+    <description>Root module of SPS4J</description>
+    <url>https://github.com/qchole/sps4j</url>
 
 
     <licenses>

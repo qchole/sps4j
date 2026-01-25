@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>sps4j-plugin-parent</artifactId>
+    <name>SPS4J Plugin Parent</name>
+    <description>Parent maven dependency for SPS4J plugins</description>
     <packaging>pom</packaging>
 
     <properties>

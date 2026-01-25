@@ -11,6 +11,8 @@
     </parent>
 
     <artifactId>sps4j-core</artifactId>
+    <name>SPS4J Core</name>
+    <description>Core functionality for SPS4J</description>
 
     <dependencies>
         <dependency>
