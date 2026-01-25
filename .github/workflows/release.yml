@@ -41,7 +41,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Perform release
-        run: mvn -B clean deploy -Prelease -Drevision=${revision.version}
+        run: mvn -B clean deploy -Prelease -Drevision=${{ github.event.inputs.releaseVersion }}
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_TOKEN: ${{ secrets.SONATYPE_TOKEN }}
