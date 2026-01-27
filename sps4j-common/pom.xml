@@ -40,6 +40,7 @@
                 </dependencies>
                 <configuration>
                     <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/delombok_gen</outputDirectory>
                     <addOutputDirectory>false</addOutputDirectory>
                 </configuration>
                 <executions>
@@ -61,7 +62,7 @@
                     <failOnWarnings>false</failOnWarnings>
                     <!-- Needed when run inside Intellij IDEA -->
                     <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-                    <sourcepath>${project.build.directory}/generated-sources/delombok</sourcepath>
+                    <sourcepath>${project.build.directory}/delombok_gen</sourcepath>
                 </configuration>
                 <executions>
                     <execution>
