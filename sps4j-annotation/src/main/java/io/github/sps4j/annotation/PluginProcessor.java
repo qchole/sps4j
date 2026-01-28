@@ -11,6 +11,7 @@ import com.github.zafarkhaja.semver.expr.ExpressionParser;
 import com.google.auto.service.AutoService;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -230,6 +231,10 @@ public class PluginProcessor extends AbstractProcessor {
                     final String name = annotationType.asElement().asType().toString();
                     if (Sps4jPluginInterface.class.getCanonicalName().equals(name)) {
                         final Map<? extends ExecutableElement, ? extends AnnotationValue> values = annotation.getElementValues();
+                        if (MapUtils.isEmpty(values)) {
+                            found = Pair.of(ent.getKey(), ent.getKey());
+                            continue;
+                        }
                         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : values.entrySet()) {
                             if ("value".equals(entry.getKey().getSimpleName().toString())) {
                                 String pluginType = StringUtils.isBlank((String) entry.getValue().getValue()) ? ent.getKey() : (String) entry.getValue().getValue();
