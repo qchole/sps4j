@@ -26,7 +26,7 @@ jobs:
           git config user.email "actions@github.com"
       - name: Set release version var
         run: |
-          revison_version=$(mvn help:evaluate -Dexpression=revison.version -q -DforceStdout)
+          revison_version=$(mvn help:evaluate -Dexpression=revision.version -q -DforceStdout)
           echo "RELEASE_VERSION=$revison_version" >> $GITHUB_ENV
 
       - name: Set up JDK 17
