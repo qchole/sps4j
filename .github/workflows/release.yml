@@ -43,7 +43,6 @@ jobs:
 
       - name: Perform release
         run: |
-          RELEASE_VERSION=$(mvn help:evaluate -Dexpression=revison.version -q -DforceStdout)
           mvn -B clean deploy -Prelease -Drevision=$RELEASE_VERSION
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
