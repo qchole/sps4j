@@ -26,7 +26,6 @@ import java.util.Map;
  */
 @Slf4j
 public class Sps4jRunListener implements SpringApplicationRunListener {
-
     private final SpringApplication application;
 
     public Sps4jRunListener(SpringApplication application, String[] args) {
