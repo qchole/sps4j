@@ -283,6 +283,9 @@ public class PluginProcessor extends AbstractProcessor {
      */
     @VisibleForTesting
      static boolean isValidVersionConstraint(String expr) {
+        if ("*".equals(expr.trim())) {
+            return true;
+        }
         try {
             ExpressionParser.newInstance().parse(expr);
             return true;
