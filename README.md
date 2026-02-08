@@ -290,6 +290,14 @@ This response comes from a controller inside the plugin!
 ```
 This confirms that the plugin's web layer has been successfully integrated into the host application's service, running in its own namespace to avoid routing conflicts. Meanwhile, you can still get an instance of `GreeterPlugin` via `PluginManager` in the host application and call its methods.
 
+#### Get Spring beans of host application inside plugin
+
+You can get Spring beans inside the plugin via the `HostApplicationContextHolder` which holds the `ApplicationContext` of the host spring application.
+
+```java
+  HostApplicationContextHolder.getHostAppContext().getBean(beanClass);
+```
+
 
 ## 📖 Examples
 

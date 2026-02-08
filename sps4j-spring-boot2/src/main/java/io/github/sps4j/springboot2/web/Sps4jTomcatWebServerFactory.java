@@ -52,7 +52,7 @@ public class Sps4jTomcatWebServerFactory extends TomcatServletWebServerFactory {
 
     @Override
     public WebServer getWebServer(ServletContextInitializer... initializers) {
-        ApplicationContext baseApplicationContext = HostApplicationContextHolder.getBaseAppContext();
+        ApplicationContext baseApplicationContext = HostApplicationContextHolder.getHostAppContext();
         Assert.isInstanceOf(ServletWebServerApplicationContext.class, baseApplicationContext);
         ServletWebServerApplicationContext webServerApplicationContext = (ServletWebServerApplicationContext) baseApplicationContext;
         Tomcat embedTomcat = ((TomcatWebServer) webServerApplicationContext.getWebServer()).getTomcat();
