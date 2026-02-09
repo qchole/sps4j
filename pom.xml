@@ -78,6 +78,7 @@
         <javadoc.disabled>false</javadoc.disabled>
         <deploy.disabled>false</deploy.disabled>
         <source.plugin.version>3.3.0</source.plugin.version>
+        <surefile.argline>-XX:+EnableDynamicAgentLoading</surefile.argline>
     </properties>
 
 
@@ -335,6 +336,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
+                <configuration>
+                    <argLine>${surefile.argline}</argLine>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.outbrain.swinfra</groupId>
@@ -449,6 +453,15 @@
 
 
     <profiles>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <surefile.argline />
+            </properties>
+        </profile>
         <profile>
             <id>jdk-after-17</id>
             <activation>
