@@ -29,11 +29,11 @@ jobs:
           revison_version=$(mvn help:evaluate -Dexpression=revision.version -q -DforceStdout)
           echo "RELEASE_VERSION=$revison_version" >> $GITHUB_ENV
 
-      - name: Set up JDK 17
+      - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 25
           cache: maven
           server-id: central
           server-username: MAVEN_USERNAME
@@ -57,6 +57,7 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+          target_commitish: ${{ github.sha }}
 
       - name: Summary
         if: success()

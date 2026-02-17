@@ -58,51 +58,51 @@ public class DefaultPluginManager implements PluginManager {
     @Nonnull
     private final Sps4jPluginLoader pluginLoader;
 
-        static {
-            discoverInterfaces();
+    static {
+        discoverInterfaces();
+    }
+
+    /**
+     * Constructs a new DefaultPluginManager with default storage and loader.
+     *
+     * @param localRepoDir             The base dir of local repository where plugins are located.
+     * @param productPluginLoadService The service providing product-specific information.
+     */
+    public DefaultPluginManager(@Nonnull String localRepoDir, @Nonnull ProductPluginLoadService productPluginLoadService) {
+        this(productPluginLoadService, true, new LocalDirJarPluginPackageRepository(localRepoDir), new DefaultPluginLoader());
+    }
+
+    /**
+     * Constructs a new DefaultPluginManager with a custom plugin loader.
+     *
+     * @param localRepoDir             The base dir of local repository where plugins are located.
+     * @param productPluginLoadService The service providing product-specific information.
+     * @param pluginLoader             The custom plugin loader to use.
+     */
+    public DefaultPluginManager(@Nonnull String localRepoDir, @Nonnull ProductPluginLoadService productPluginLoadService,
+                                @Nonnull Sps4jPluginLoader pluginLoader) {
+        this(productPluginLoadService, true, new LocalDirJarPluginPackageRepository(localRepoDir), pluginLoader);
+    }
+
+    /**
+     * Constructs a new DefaultPluginManager with full custom configuration.
+     *
+     * @param productPluginLoadService The service providing product-specific information.
+     * @param init                     Whether to automatically initialize the manager upon construction.
+     * @param repository               The plugin storage implementation.
+     * @param pluginLoader             The plugin loader implementation.
+     */
+    public DefaultPluginManager(@Nonnull ProductPluginLoadService productPluginLoadService,
+                                boolean init,
+                                @Nonnull PluginRepository repository,
+                                @Nonnull Sps4jPluginLoader pluginLoader
+    ) {
+        this.productPluginLoadService = productPluginLoadService;
+        this.repository = repository;
+        this.pluginLoader = pluginLoader;
+        if (init) {
+            init();
         }
-    
-        /**
-         * Constructs a new DefaultPluginManager with default storage and loader.
-         *
-         * @param localRepoDir             The base dir of local repository where plugins are located.
-         * @param productPluginLoadService The service providing product-specific information.
-         */
-        public DefaultPluginManager(@Nonnull String localRepoDir, @Nonnull ProductPluginLoadService productPluginLoadService) {
-            this(productPluginLoadService, true, new LocalDirJarPluginPackageRepository(localRepoDir), new DefaultPluginLoader());
-        }
-    
-        /**
-         * Constructs a new DefaultPluginManager with a custom plugin loader.
-         *
-         * @param localRepoDir             The base dir of local repository where plugins are located.
-         * @param productPluginLoadService The service providing product-specific information.
-         * @param pluginLoader             The custom plugin loader to use.
-         */
-        public DefaultPluginManager(@Nonnull String localRepoDir, @Nonnull ProductPluginLoadService productPluginLoadService,
-                                    @Nonnull Sps4jPluginLoader pluginLoader) {
-            this(productPluginLoadService, true, new LocalDirJarPluginPackageRepository(localRepoDir), pluginLoader);
-        }
-    
-        /**
-         * Constructs a new DefaultPluginManager with full custom configuration.
-         *
-         * @param productPluginLoadService The service providing product-specific information.
-         * @param init                 Whether to automatically initialize the manager upon construction.
-         * @param repository                  The plugin storage implementation.
-         * @param pluginLoader             The plugin loader implementation.
-         */
-        public DefaultPluginManager(@Nonnull ProductPluginLoadService productPluginLoadService,
-                                    boolean init,
-                                    @Nonnull PluginRepository repository,
-                                    @Nonnull Sps4jPluginLoader pluginLoader
-        ) {
-            this.productPluginLoadService = productPluginLoadService;
-            this.repository = repository;
-            this.pluginLoader = pluginLoader;
-            if (init) {
-                init();
-            }
     }
 
     public static boolean isSupportedType(String type) {
@@ -149,14 +149,14 @@ public class DefaultPluginManager implements PluginManager {
     }
 
     Map<String, Map<String, MetaInfo>> loadMetadata(@Nullable PluginArtifact artifact) {
-        final List<PluginPackage> containers = repository.listPackages();
+        final List<PluginPackage> packages = repository.listPackages();
         Map<String, Map<String, MetaInfo>> result = new HashMap<>();
-        for (PluginPackage c : containers) {
-            try (final PluginPackage container = c) {
-                if (!c.contains(Const.DESC_FILE)) {
+        for (PluginPackage p : packages) {
+            try (final PluginPackage pack = p) {
+                if (!p.contains(Const.DESC_FILE)) {
                     continue;
                 }
-                List<PluginDesc> descriptors = loadDescriptors(container.getResource(Const.DESC_FILE));
+                List<PluginDesc> descriptors = loadDescriptors(pack.getResource(Const.DESC_FILE));
                 for (PluginDesc descriptor : descriptors) {
                     if (artifact != null && (!Objects.equals(artifact.getType(), descriptor.getType()) || !Objects.equals(artifact.getName(), descriptor.getName()))) {
                         continue;
@@ -165,7 +165,7 @@ public class DefaultPluginManager implements PluginManager {
                             result.computeIfAbsent(descriptor.getType(), t -> new HashMap<>());
                     final MetaInfo existMeta = typeMetaMap.get(descriptor.getName());
                     if (canLoad(productPluginLoadService, descriptor)) {
-                        MetaInfo newMetaInfo = new MetaInfo(descriptor, URI.create(container.getBaseUrl()).toURL());
+                        MetaInfo newMetaInfo = new MetaInfo(descriptor, URI.create(pack.getBaseUrl()).toURL());
                         if (existMeta == null || existMeta.getDescriptor().getVersion().compareTo(newMetaInfo.getDescriptor().getVersion()) < 0) {
                             typeMetaMap.put(descriptor.getName(), newMetaInfo);
                             if (existMeta != null) {
@@ -189,27 +189,30 @@ public class DefaultPluginManager implements PluginManager {
     }
 
     private static void removeTypeWithEmptyPluginFromMetaMap(Map<String, Map<String, MetaInfo>> pluginMetaMap) {
-            Set<String> toRemove = new HashSet<>();
-            pluginMetaMap.forEach((key, value) -> {
-                if (MapUtils.isEmpty(value)) {
-                    toRemove.add(key);
-                }
-            });
-            toRemove.forEach(pluginMetaMap::remove);
+        Set<String> toRemove = new HashSet<>();
+        pluginMetaMap.forEach((key, value) -> {
+            if (MapUtils.isEmpty(value)) {
+                toRemove.add(key);
+            }
+        });
+        toRemove.forEach(pluginMetaMap::remove);
     }
 
     private List<PluginDesc> loadDescriptors(@Nonnull InputStream stream) throws IOException {
         final String content = IOUtils.toString(stream, StandardCharsets.UTF_8);
         final JsonNode jsonNode = YamlUtils.getYamlMapper().readTree(content);
         if (jsonNode.isArray()) {
-            return YamlUtils.getYamlMapper().convertValue(jsonNode, new TypeReference<List<PluginDesc>>() {});
+            return YamlUtils.getYamlMapper().convertValue(jsonNode, new TypeReference<List<PluginDesc>>() {
+            });
         } else {
             return Collections.singletonList(YamlUtils.getYamlMapper().convertValue(jsonNode, PluginDesc.class));
         }
     }
 
     boolean canLoad(ProductPluginLoadService pluginService, PluginDesc pd) {
-        return pluginService.productVersion().satisfies(pd.getProductVersionConstraint())
+        String productVersionConstraint = pd.getProductVersionConstraint();
+        return ("*".equals(productVersionConstraint.trim())
+                || pluginService.productVersion().satisfies(productVersionConstraint))
                 && pluginService.canLoad(pd);
     }
 
@@ -457,11 +460,11 @@ public class DefaultPluginManager implements PluginManager {
 
     @Override
     public PluginWrapper getPlugin(@Nonnull String type, @Nonnull String name, @Nonnull Map<String, Object> conf) {
-        return getPlugin(type, name, null,  conf);
+        return getPlugin(type, name, null, conf);
     }
 
     @Override
-    public PluginWrapper getPlugin(@Nonnull Class<?> pluginInterface, @Nonnull String name,  @Nonnull Map<String, Object> conf) {
+    public PluginWrapper getPlugin(@Nonnull Class<?> pluginInterface, @Nonnull String name, @Nonnull Map<String, Object> conf) {
         return getPlugin(checkInterfaceSupported(pluginInterface), name, conf);
     }
 

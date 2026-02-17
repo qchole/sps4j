@@ -52,7 +52,7 @@ public final class HostApplicationContextHolder {
      *
      * @return The host application context.
      */
-    public static ApplicationContext getBaseAppContext() {
+    public static ApplicationContext getHostAppContext() {
         return getInstance().hostApplicationContext;
     }
 

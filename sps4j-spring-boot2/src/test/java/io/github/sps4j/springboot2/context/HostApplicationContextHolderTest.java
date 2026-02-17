@@ -45,14 +45,14 @@ public class HostApplicationContextHolderTest {
         HostApplicationContextHolder holder2 = HostApplicationContextHolder.create(mockContext2);
 
         assertSame(holder1, holder2);
-        assertSame(mockContext1, HostApplicationContextHolder.getBaseAppContext());
+        assertSame(mockContext1, HostApplicationContextHolder.getHostAppContext());
     }
 
     @Test
-    public void getBaseAppContext_returnsCorrectContext() {
+    public void getHostAppContext_returnsCorrectContext() {
         ApplicationContext mockContext = mock(ApplicationContext.class);
         HostApplicationContextHolder.create(mockContext);
-        assertSame(mockContext, HostApplicationContextHolder.getBaseAppContext());
+        assertSame(mockContext, HostApplicationContextHolder.getHostAppContext());
     }
 
     @Test

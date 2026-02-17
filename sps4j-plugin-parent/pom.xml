@@ -38,7 +38,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerArgs>
-                        <arg>-ApluginVersion=${revision.version}</arg>
+                        <arg>-ApluginVersion=${project.version}</arg>
                         <arg>-ApluginArtifact=${project.artifactId}</arg>
                     </compilerArgs>
                 </configuration>

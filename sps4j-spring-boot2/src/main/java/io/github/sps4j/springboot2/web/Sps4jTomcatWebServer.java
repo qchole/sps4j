@@ -222,7 +222,9 @@ public class Sps4jTomcatWebServer implements WebServer {
     }
 
     private void stopTomcatIfNecessary() throws LifecycleException {
-        awaitThread.stop();
+        if (awaitThread != null) {
+            awaitThread.stop();
+        }
     }
 
     void addPreviouslyRemovedConnectors() {
