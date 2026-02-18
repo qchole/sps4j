@@ -444,6 +444,7 @@
                         <artifact>hello-plugin</artifact>
                         <artifact>host-app</artifact>
                         <artifact>host-application</artifact>
+                        <artifact>host-application-jetty</artifact>
                         <artifact>plugin-app</artifact>
                     </excludeArtifacts>
                 </configuration>

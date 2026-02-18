@@ -30,7 +30,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>
-            <version>2.7.18</version>
+            <version>${spring-boot2.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
