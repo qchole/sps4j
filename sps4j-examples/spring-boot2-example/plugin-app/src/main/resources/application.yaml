@@ -1,0 +1,6 @@
+server:
+  servlet:
+    context-path: /my-plugin
+sps4j:
+  spring-mvc:
+    add-servlet-context-prefix: false

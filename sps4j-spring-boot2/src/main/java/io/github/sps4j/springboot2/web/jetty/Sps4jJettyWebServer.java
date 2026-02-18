@@ -18,20 +18,27 @@ public class Sps4jJettyWebServer implements WebServer {
         this.jetty = server;
         this.handler = handler;
         this.handlerCollection = handlerCollection;
-        start();
+        initialize();
     }
 
-    @Override
     @SneakyThrows
-    public void start() throws WebServerException {
+    void initialize() {
         handler.start();
     }
 
     @Override
     @SneakyThrows
+    public void start() throws WebServerException {
+        //do nothing
+    }
+
+
+
+    @Override
+    @SneakyThrows
     public void stop() {
-        handler.stop();
         handlerCollection.removeHandler(handler);
+        handler.stop();
     }
 
     @Override
