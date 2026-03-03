@@ -11,7 +11,7 @@ sps4j is a lightweight and easy-to-use plugin framework designed for Java. It ai
     - The plugin itself can be a complete Spring Boot application (by extending `SpringBoot2AppPlugin`).
     - Seamlessly integrates the plugin's web layer (e.g., Controllers) into the host application, supports Tomcat and Jetty as web server.
     - Supports accessing beans from the host application within the plugin.
-- **Versioning**: Plugins can declare a compatible version range with the host application, enabling smooth upgrades.
+- **Versioning**: Plugins can declare a compatible version range with the host application via range expression provided by [jsemver](https://github.com/zafarkhaja/jsemver), enabling smooth upgrades.
 
 ## 📦 Modules
 
