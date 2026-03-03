@@ -26,10 +26,15 @@ import java.util.Map;
  */
 @Slf4j
 public class Sps4jRunListener implements SpringApplicationRunListener {
-    private final SpringApplication application;
 
-    public Sps4jRunListener(SpringApplication application, String[] args) {
-        this.application = application;
+
+    private static final String SPRING_BOOT_PROP_ADMIN_JMX_NAME = "spring.application.admin.jmx-name";
+    private static final String SPRING_BOOT_ADMIN_JMX_NAME_KEY = "org.springframework.boot:type=Admin,name=";
+    private static final String SLASH = "/";
+    public static final String PROPERTY_SOURCE_NAME_SPS4J_PLUGIN_OVERWRITE = "sps4j-plugin-overwrite";
+
+
+    public Sps4jRunListener(SpringApplication ignored, String[] args) {
     }
 
     @Override
@@ -42,11 +47,11 @@ public class Sps4jRunListener implements SpringApplicationRunListener {
             MetaInfo metaInfo = PluginSpringbootBootstrapContext.getCurrentPluginMetaInfo();
             log.info("Application context prepared for plugin application");
             Map<String, Object> source = new HashMap<>();
-            source.put("spring.application.admin.jmx-name",
-                    "org.springframework.boot:type=Admin,name="
-                            + metaInfo.getDescriptor().getType() + "/" + metaInfo.getDescriptor().getName());
+            source.put(SPRING_BOOT_PROP_ADMIN_JMX_NAME,
+                    SPRING_BOOT_ADMIN_JMX_NAME_KEY
+                            + metaInfo.getDescriptor().getType() + SLASH + metaInfo.getDescriptor().getName());
             context.getEnvironment().getPropertySources()
-                    .addFirst(new MapPropertySource("sps4j-plugin-override", source));
+                    .addFirst(new MapPropertySource(PROPERTY_SOURCE_NAME_SPS4J_PLUGIN_OVERWRITE, source));
         }
     }
 }
