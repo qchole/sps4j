@@ -50,15 +50,22 @@ public class InterfaceAnnotationProcessor extends AbstractProcessor {
             for (Element element : elements) {
                 TypeElement typeElement = (TypeElement) element;
                 final Set<String> ifNames = interfaces(typeElement);
+                String className = typeElement.getQualifiedName().toString();
                 if (!ifNames.contains(PLUGIN_BASE_INTERFACE)) {
                     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-                            "class " + typeElement.getQualifiedName().toString() +
-                                    " with @PluginInterface must extends " +  PLUGIN_BASE_INTERFACE);
+                            String.format("class '%s' with @PluginInterface must extends '%s'", className, PLUGIN_BASE_INTERFACE) );
                 }
                 Sps4jPluginInterface annotation = element.getAnnotation(Sps4jPluginInterface.class);
-                //todo fail on dup
-                providers.put(StringUtils.isNotBlank(annotation.value()) ? annotation.value() : ((TypeElement) element).getQualifiedName().toString(),
-                        typeElement.getQualifiedName().toString());
+                String pluginType = StringUtils.isNotBlank(Objects.requireNonNull(annotation).value()) ?
+                        annotation.value() : ((TypeElement) element).getQualifiedName().toString();
+                String exist = providers.get(pluginType);
+                if (exist != null) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+                            String.format("Conflict plugin type '%s' on class '%s' and '%s'", pluginType, exist, className));
+                } else {
+                    providers.put(pluginType,
+                            className);
+                }
             }
         }
         return false;
