@@ -23,7 +23,7 @@ import java.util.*;
  * Annotation processor for {@link Sps4jPluginInterface}.
  * <p>
  * This processor collects all interfaces annotated with {@link Sps4jPluginInterface} and generates a file
- * {@code META-INF/sps4j/interfaces} that contains a map of plugin interface names to their fully qualified class names.
+ * {@code META-INF/sps4j/sps4j-plugin-interface.yaml} that contains a map of plugin interface names to their fully qualified class names.
  * The plugin interface name is either the value of the annotation or the simple name of the interface.
  *
  * @author Allan-QLB
@@ -53,7 +53,7 @@ public class InterfaceAnnotationProcessor extends AbstractProcessor {
                 String className = typeElement.getQualifiedName().toString();
                 if (typeElement.getKind() != ElementKind.INTERFACE) {
                     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-                            String.format("class '%s' with @PSps4jPluginInterface is expected to be an interface", className));
+                            String.format("class '%s' with @Sps4jPluginInterface is expected to be an interface", className));
                 }
                 final Set<String> ifNames = interfaces(typeElement);
                 if (!ifNames.contains(PLUGIN_BASE_INTERFACE)) {

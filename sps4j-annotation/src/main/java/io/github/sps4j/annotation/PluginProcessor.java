@@ -40,7 +40,7 @@ import java.util.*;
 @AutoService(Processor.class)
 @SupportedOptions({"pluginVersion", "pluginArtifact"})
 public class PluginProcessor extends AbstractProcessor {
-    private static final String ERROR_MSG_FORMAT = "@Plugin annotation error on class '%s', parameter '%s', msg: %s";
+    private static final String ERROR_MSG_FORMAT = "@Sps4jPlugin annotation error on class '%s', parameter '%s', msg: %s";
     private String projectVersion = null;
     private int round = 0;
 
@@ -78,7 +78,7 @@ public class PluginProcessor extends AbstractProcessor {
             final String className = element.getQualifiedName().toString();
             final Sps4jPlugin annotation = annotatedPluginType.getAnnotation();
             if (element.getModifiers().contains(Modifier.ABSTRACT)) {
-                messager.printMessage(Diagnostic.Kind.ERROR, "@Plugin on abstract type " + className);
+                messager.printMessage(Diagnostic.Kind.ERROR, "@Sps4jPlugin on abstract type " + className);
                 hasErrors = true;
                 break;
             }
@@ -196,11 +196,7 @@ public class PluginProcessor extends AbstractProcessor {
                 && !current.getQualifiedName().toString().startsWith("sun")) {
             classCandidates.add(current);
             final TypeMirror superclass = current.getSuperclass();
-            if (superclass != null) {
-                current = (TypeElement) processingEnv.getTypeUtils().asElement(superclass);
-            } else {
-                current = null;
-            }
+            current = (TypeElement) processingEnv.getTypeUtils().asElement(superclass);
         }
         Map<String, TypeElement> allInterfaces = new HashMap<>();
         classCandidates.forEach(c -> allInterfaces.putAll(findAllInterfacesOfType(c)));
