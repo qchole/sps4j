@@ -6,19 +6,19 @@ import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 
 @Getter
-public class Sps4jContextPathCompositeHandler implements HttpHandler{
+public class Sps4jContextPathCompositeHandler implements HttpHandler {
 
-    private final TreeMap<String, HttpHandler> handlerMap;
+    private final ConcurrentNavigableMap<String, HttpHandler> handlerMap;
 
 
     public Sps4jContextPathCompositeHandler(Map<String, ? extends HttpHandler> handlerMap) {
@@ -26,9 +26,9 @@ public class Sps4jContextPathCompositeHandler implements HttpHandler{
         this.handlerMap = initHandlers(handlerMap);
     }
 
-    private static TreeMap<String, HttpHandler> initHandlers(Map<String, ? extends HttpHandler> map) {
+    private static ConcurrentNavigableMap<String, HttpHandler> initHandlers(Map<String, ? extends HttpHandler> map) {
         map.keySet().forEach(Sps4jContextPathCompositeHandler::assertValidContextPath);
-        TreeMap<String, HttpHandler> m = new TreeMap<>(((Comparator<String>) (String::compareTo)).reversed());
+        ConcurrentNavigableMap<String, HttpHandler> m = new ConcurrentSkipListMap<>(((Comparator<String>) String::compareTo).reversed());
         m.putAll(map);
         return m;
     }
