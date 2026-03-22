@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Sps4jPlugin(version = "1.2.1", name = "spring-hello",
-        productVersionConstraint = ">=1.0.0",
-        tags = {SpringBoot2AppPlugin.TAG_SPRING_MVC}
+        productVersionConstraint = ">=1.0.0"
 )
 @SpringBootApplication
 public class SpringHelloPlugin extends SpringBoot2AppPlugin implements GreeterPlugin {

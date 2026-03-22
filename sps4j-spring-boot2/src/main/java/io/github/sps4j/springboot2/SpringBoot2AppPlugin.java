@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +31,14 @@ public abstract class SpringBoot2AppPlugin implements Sps4jPlugin {
      * A tag indicating that the plugin is a Spring Web MVC application.
      */
     public static final String TAG_SPRING_MVC = "spring-webmvc";
+    /**
+     * A tag indicating that the plugin is a Spring Web WebFlux application.
+     */
     public static final String TAG_SPRING_WEBFLUX = "spring-webflux";
+    /**
+     * A tag indicating that the plugin is a Spring non-web application.
+     */
+    public static final String TAG_SPRING_NOWEB = "spring-noweb";
     /**
      * A regex pattern to identify Spring Boot's configuration files (application.yml, bootstrap.properties, etc.).
      * This is used to ensure these files are loaded from the plugin's classloader.
@@ -54,33 +62,33 @@ public abstract class SpringBoot2AppPlugin implements Sps4jPlugin {
         Sps4jPluginClassLoader classLoader = (Sps4jPluginClassLoader) getClass().getClassLoader();
         classLoader.addIgnoreParentResourceNamePattern(SPRING_CONFIG_FILE_NAME_PATTERN);
         final SpringApplication springApplication = new SpringApplication(this.getClass());
-        final WebApplicationType webApplicationType;
-        if (metadata.getDescriptor().getTags().contains(TAG_SPRING_MVC)) {
-            webApplicationType = WebApplicationType.SERVLET;
-        } else if (metadata.getDescriptor().getTags().contains(TAG_SPRING_WEBFLUX)) {
-            webApplicationType = WebApplicationType.REACTIVE;
-        } else {
-            webApplicationType = WebApplicationType.NONE;
+        List<String> tags = metadata.getDescriptor().getTags();
+        if (tags.contains(TAG_SPRING_MVC)) {
+            springApplication.setWebApplicationType(WebApplicationType.SERVLET);
+        } else if (tags.contains(TAG_SPRING_WEBFLUX)) {
+            springApplication.setWebApplicationType(WebApplicationType.REACTIVE);
+        } else if (tags.contains(TAG_SPRING_NOWEB)) {
+            springApplication.setWebApplicationType(WebApplicationType.NONE);
         }
-        springApplication.setWebApplicationType(webApplicationType);
         PluginSpringbootBootstrapContext.setCurrentPluginMetaInfo(metadata);
         try {
             applicationContext = springApplication.run();
             ((Sps4jPluginClassLoader) this.getClass().getClassLoader()).addOnCloseAction(() -> {
-                if (webApplicationType == WebApplicationType.REACTIVE) {
-                    new Thread(() -> {
-                        log.info("Stop plugin application context {}", applicationContext.getApplicationName());
-                        applicationContext.close();
-                    }).start();
+                if (springApplication.getWebApplicationType() == WebApplicationType.REACTIVE) {
+                    new Thread(() -> stopPluginApplicationContext(applicationContext)).start();
                 } else  {
-                    log.info("Stop plugin application context {}", applicationContext.getApplicationName());
-                    applicationContext.close();
+                    stopPluginApplicationContext(applicationContext);
                 }
             });
         } finally {
             PluginSpringbootBootstrapContext.removeCurrentPluginMetaInfo();
         }
 
+    }
+
+    private static void stopPluginApplicationContext(ConfigurableApplicationContext applicationContext) {
+        log.info("Stop plugin application context {}", applicationContext.getApplicationName());
+        applicationContext.close();
     }
 
 }
