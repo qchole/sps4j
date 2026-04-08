@@ -16,6 +16,8 @@
         <module>plugin-app-spring-boot3</module>
         <module>host-application-spring-boot3</module>
         <module>host-application-jetty-spring-boot3</module>
+        <module>plugin-app-spring-boot3-webflux</module>
+        <module>host-application-spring-boot3-webflux</module>
     </modules>
 
 </project>
