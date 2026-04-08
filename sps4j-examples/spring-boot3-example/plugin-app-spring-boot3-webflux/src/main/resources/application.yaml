@@ -1,0 +1,6 @@
+spring:
+  webflux:
+    base-path: /my-plugin
+sps4j:
+  web-flux:
+    add-context-prefix: false
