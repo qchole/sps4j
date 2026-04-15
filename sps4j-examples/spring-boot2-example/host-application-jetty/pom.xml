@@ -45,12 +45,13 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>plugin</id>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <phase>process-resources</phase>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/main/resources/plugin</outputDirectory>
+                            <outputDirectory>${project.basedir}/dist/plugin</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/../plugin-app/target</directory>
@@ -59,6 +60,38 @@
                                     </includes>
                                 </resource>
                             </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jar</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/dist</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/dist/lib</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -75,7 +108,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${project.basedir}/src/main/resources/plugin</directory>
+                                    <directory>${project.basedir}/dist</directory>
                                 </fileset>
                             </filesets>
                         </configuration>

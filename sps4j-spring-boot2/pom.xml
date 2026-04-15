@@ -13,6 +13,10 @@
     <name>SPS4J Springboot2</name>
     <description>Springboot2 starter for SPS4J</description>
 
+    <properties>
+        <slf4j.version>1.7.15</slf4j.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.github.qchole</groupId>
