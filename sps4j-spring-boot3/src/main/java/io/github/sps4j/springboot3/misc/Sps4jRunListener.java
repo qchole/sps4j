@@ -1,7 +1,6 @@
 package io.github.sps4j.springboot3.misc;
 
 import io.github.sps4j.common.meta.MetaInfo;
-import io.github.sps4j.core.PluginManager;
 import io.github.sps4j.core.load.Sps4jPluginClassLoader;
 import io.github.sps4j.springboot3.context.HostApplicationContextHolder;
 import io.github.sps4j.springboot3.context.PluginSpringbootBootstrapContext;
