@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties;
 import org.springframework.boot.web.reactive.server.ReactiveWebServerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.client.reactive.ReactorResourceFactory;
+import org.springframework.http.client.ReactorResourceFactory;
 
 @AutoConfiguration(before = ReactiveWebServerFactoryAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
